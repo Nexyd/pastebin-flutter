@@ -7,21 +7,13 @@ import 'models.dart';
 ///
 class Paste {
   final String? key;
-
   final DateTime createdDate;
-
   final DateTime expiredDate;
-
   final String? title;
-
   final int? sizeInBytes;
-
   final Visibility visibility;
-
   final Format format;
-
   final Uri? url;
-
   final int? hits;
 
   const Paste({
@@ -37,28 +29,30 @@ class Paste {
   });
 
   static List<Paste> fromXmlDocument(final XmlDocument xmlDocument) {
-    return xmlDocument.findElements('paste').map(fromXmlNode).toList();
+    final paste = xmlDocument.findElements('paste');
+    final map = paste.map((element) => Paste.fromXmlNode(element));
+    return map.toList();
   }
 
   static Paste fromXmlNode(final XmlNode xmlNode) {
     return Paste(
       createdDate: DateTime.fromMillisecondsSinceEpoch(
-        int.tryParse(xmlNode.getElement('paste_date')!.text)!,
+        int.tryParse(xmlNode.getElement('paste_date')!.innerText)!,
       ),
       expiredDate: DateTime.fromMillisecondsSinceEpoch(
-        int.tryParse(xmlNode.getElement('paste_expire_date')!.text)!,
+        int.tryParse(xmlNode.getElement('paste_expire_date')!.innerText)!,
       ),
       format: FormatExtension.tryParse(
-        xmlNode.getElement('paste_format_short')?.text,
+        xmlNode.getElement('paste_format_short')?.innerText,
       ),
       visibility: VisibilityExtension.tryParse(
-        xmlNode.getElement('paste_private')?.text,
+        xmlNode.getElement('paste_private')?.innerText,
       ),
-      hits: int.tryParse(xmlNode.getElement('paste_hits')!.text),
-      key: xmlNode.getElement('paste_key')?.text,
-      sizeInBytes: int.tryParse(xmlNode.getElement('paste_size')!.text),
-      title: xmlNode.getElement('paste_title')?.text,
-      url: Uri.tryParse(xmlNode.getElement('paste_url')!.text),
+      hits: int.tryParse(xmlNode.getElement('paste_hits')!.innerText),
+      key: xmlNode.getElement('paste_key')?.innerText,
+      sizeInBytes: int.tryParse(xmlNode.getElement('paste_size')!.innerText),
+      title: xmlNode.getElement('paste_title')?.innerText,
+      url: Uri.tryParse(xmlNode.getElement('paste_url')!.innerText),
     );
   }
 }

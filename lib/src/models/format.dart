@@ -255,7 +255,8 @@ enum Format {
   yaml,
   yara,
   z80,
-  zxbasic
+  zxbasic,
+  unknown
 }
 
 extension FormatExtension on Format? {
@@ -514,21 +515,19 @@ extension FormatExtension on Format? {
     Format.yara: 'yara',
     Format.z80: 'z80',
     Format.zxbasic: 'zxbasic',
+    Format.unknown: 'unknown',
   };
 
-  static Format parse(
-    final String? format,
-    final MapEntry<Format, String>? Function() onError,
-  ) {
-    return values.entries
-        .firstWhere((entry) => entry.value == format,
-            orElse: onError as MapEntry<Format, String> Function()?)
-        .key;
+  static Format parse(final String? format) {
+    final entry = values.entries.firstWhere(
+      (entry) => entry.value == format,
+      orElse: () => MapEntry(Format.unknown, ""),
+    );
+
+    return entry.key;
   }
 
-  static Format tryParse(final String? format) => parse(format, () => null);
+  static Format tryParse(final String? format) => parse(format);
 
-  String? value() {
-    return values[this!];
-  }
+  String? value() => values[this!];
 }
