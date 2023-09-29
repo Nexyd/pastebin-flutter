@@ -29,7 +29,10 @@ class Paste {
   });
 
   static List<Paste> fromXmlDocument(final XmlDocument xmlDocument) {
-    final paste = xmlDocument.findElements('paste');
+    final pasteList = xmlDocument.findElements('paste_list');
+    if (pasteList.isEmpty) return [];
+
+    final paste = pasteList.first.findElements('paste');
     final map = paste.map((element) => Paste.fromXmlNode(element));
     return map.toList();
   }

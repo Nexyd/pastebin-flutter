@@ -107,11 +107,13 @@ class OfficialPastebinClient extends PastebinClient {
 
     return response.fold(
       (l) => Left(l),
-      (r) => Right(
-        Paste.fromXmlDocument(
-          XmlDocument.parse(r.body),
-        ),
-      ),
+      (r) {
+        final body = "<paste_list>\n\t${r.body}\n</paste_list>";
+        final xml = XmlDocument.parse(body);
+        final paste = Paste.fromXmlDocument(xml);
+
+        return Right(paste);
+      },
     );
   }
 
